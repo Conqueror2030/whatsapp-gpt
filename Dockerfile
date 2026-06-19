@@ -1,13 +1,18 @@
 # Pull the exact official, pre-compiled Evolution API image
 FROM evoapicloud/evolution-api:latest
 
+USER root
+RUN mkdir -p /app/data && chmod -R 777 /app/data
+
 # Configure the system to run on Hugging Face's port requirements
 ENV PORT=7860
+ENV SERVER_PORT=7860
 EXPOSE 7860
 
 # --- THE CORRECT NO-DATABASE STACK ---
-# Completely turn off external database validation
-ENV DATABASE_ENABLED=false
+ENV DATABASE_PROVIDER=postgresql
+ENV DATABASE_CONNECTION_URI="postgresql://localhost:5432/evolution?schema=public"
+ENV DATABASE_SAVE_DATA_INSTANCE=false
 
 # Keep local file system cache active for temporary session storage
 ENV CACHE_LOCAL_ENABLED=true
